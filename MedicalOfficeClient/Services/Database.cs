@@ -25,7 +25,7 @@ namespace MedicalOfficeClient.Services
       {
         if (!optionsBuilder.IsConfigured)
         {
-          optionsBuilder.UseSqlite("Filename=sqlite.019");
+          optionsBuilder.UseSqlite("Filename=sqlite.001");
         }
       }
 

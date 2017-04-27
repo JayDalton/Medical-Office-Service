@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="using:MedicalOfficeClient.ViewModels"
     xmlns:cv="using:MedicalOfficeClient.Converters"
-    xmlns:dt="using:MedicalOfficeClient.Data"
+    xmlns:dt="using:MedicalOfficeClient.Services"
     xmlns:wuxdata="using:Windows.UI.Xaml.Data"
     xmlns:local="using:MedicalOfficeClient.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

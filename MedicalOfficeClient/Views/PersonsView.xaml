@@ -1,0 +1,91 @@
+﻿<Page
+    x:Class="MedicalOfficeClient.Views.PersonsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MedicalOfficeClient.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        
+        
+    </Page.Resources>
+    
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <!--<Grid>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Personen"/>
+                    <Button Grid.Column="1" x:Name="AddPerson" Click="AddPerson_Click" Background="Blue">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
+                    </Button>
+                </Grid>
+
+                <AutoSuggestBox Grid.Row="1" Margin="10"
+            x:Name="SearchPersonBox"
+            QueryIcon="Find" PlaceholderText="Person suchen..."
+            TextChanged="SearchPersonBox_TextChanged"
+            QuerySubmitted="SearchPersonBox_QuerySubmitted"
+            SuggestionChosen="SearchPersonBox_SuggestionChosen"/>
+
+                --><!-- 
+        IsItemClickEnabled="True" ItemClick="PersonList_ItemClick" 
+        SelectedItem="{x:Bind ViewModel.PersonToViewDetails, Mode=TwoWay}" 
+        --><!--
+
+                <SemanticZoom Grid.Row="2">
+                    <SemanticZoom.ZoomedInView>
+                        <ListView x:Name="PersonList" SelectionMode="None"
+                ItemsSource="{x:Bind GroupedPersons.View, Mode=OneWay}"
+                ScrollViewer.IsHorizontalScrollChainingEnabled="False"
+                IsItemClickEnabled="True" ItemClick="PersonList_ItemClick" 
+                ItemTemplate="{StaticResource ZoomedInItemTemplate}">
+                            <ListView.GroupStyle>
+                                <GroupStyle HeaderTemplate="{StaticResource ZoomedInHeaderTemplate}"/>
+                            </ListView.GroupStyle>
+                        </ListView>
+                    </SemanticZoom.ZoomedInView>
+
+                    <SemanticZoom.ZoomedOutView>
+                        <GridView SelectionMode="None"
+              ItemsSource="{x:Bind GroupedPersons.View.CollectionGroups, Mode=OneWay}"
+              ItemTemplate="{StaticResource ZoomedOutItemTemplate}">
+                        </GridView>
+                    </SemanticZoom.ZoomedOutView>
+                </SemanticZoom>
+
+            </Grid>
+
+            <ContentPresenter 
+        x:Name="DetailContentPresenter" Grid.Column="1" Visibility="Visible"
+        Content="{x:Bind ViewModel.PersonToViewDetails, Mode=OneWay}"
+        ContentTemplate="{StaticResource DetailContentTemplate}"/>
+
+            <ContentPresenter 
+        x:Name="CreateContentPresenter" Grid.Column="1" Visibility="Collapsed" 
+        Content="{x:Bind ViewModel.PersonToCreateOrEdit, Mode=TwoWay}"
+        ContentTemplate="{StaticResource CreateContentTemplate}"/>
+
+            --><!--<Image Grid.Column="1" Source="{x:Bind ViewModel.RandomImage, Mode=OneWay}" Width="400" Height="400"/>--><!--
+
+        </Grid>-->
+    </Grid>
+</Page>

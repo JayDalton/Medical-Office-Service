@@ -2,18 +2,152 @@
     x:Class="MedicalOfficeClient.Views.PersonsView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:MedicalOfficeClient.ViewModels"
+    xmlns:cv="using:MedicalOfficeClient.Converters"
+    xmlns:dt="using:MedicalOfficeClient.Data"
+    xmlns:wuxdata="using:Windows.UI.Xaml.Data"
     xmlns:local="using:MedicalOfficeClient.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <Page.Resources>
-        
-        
+        <cv:DateFormatConverter x:Name="DateFormat"/>
+
+        <CollectionViewSource 
+      x:Key="GroupedPersons" x:Name="GroupedPersons"
+      Source="{x:Bind ViewModel.GroupedPersons, Mode=OneWay}"
+      IsSourceGrouped="True"/>
+
+        <DataTemplate x:Key="ZoomedInItemTemplate" x:DataType="vm:PersonViewModel">
+            <TextBlock Text="{x:Bind Name}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ZoomedInHeaderTemplate" x:DataType="vm:PersonGroup">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{x:Bind Key}"/>
+                <TextBlock Text="{x:Bind Count}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ZoomedOutItemTemplate" x:DataType="wuxdata:ICollectionViewGroup">
+            <TextBlock Text="{x:Bind Group.(vm:PersonGroup.Key)}" FontSize="20"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PersonCaseTemplate" x:DataType="vm:MedicalCaseViewModel">
+            <TextBlock Grid.Column="0" Text="{x:Bind Label, Mode=OneWay}" FontSize="20" Foreground="{x:Bind Color, Mode=OneWay}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DetailContentTemplate" x:DataType="vm:PersonViewModel">
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Persönliche Daten" Style="{StaticResource SampleHeaderTextStyle}"/>
+                    <Button Grid.Column="1" Click="EditPerson_Click" Background="Blue" Margin="10">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE70F;"/>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Name: " />
+                        <TextBlock Text="Geburtstag: " />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="{x:Bind Name}" />
+                        <TextBlock Text="{x:Bind Birthday, Converter={StaticResource DateFormat}, ConverterParameter='D'}" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Medizinische Fälle" Style="{StaticResource SampleHeaderTextStyle}"/>
+                    <Button Grid.Column="1" Click="{x:Bind AddNewCaseAsync}" Tag="{x:Bind dt:MedicalCaseType.Logo}" Margin="10" Background="{x:Bind dt:MedicalCase.TypeColor(dt:MedicalCaseType.Logo)}" >
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
+                    </Button>
+                    <Button Grid.Column="2" Click="{x:Bind AddNewCaseAsync}" Tag="{x:Bind dt:MedicalCaseType.Ergo}" Margin="10" Background="{x:Bind dt:MedicalCase.TypeColor(dt:MedicalCaseType.Ergo)}">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
+                    </Button>
+                    <Button Grid.Column="3" Click="{x:Bind AddNewCaseAsync}" Tag="{x:Bind dt:MedicalCaseType.Physio}" Margin="10" Background="{x:Bind dt:MedicalCase.TypeColor(dt:MedicalCaseType.Physio)}">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
+                    </Button>
+                    <Button Grid.Column="4" Click="{x:Bind AddNewCaseAsync}" Tag="{x:Bind dt:MedicalCaseType.Satellite}" Margin="10" Background="{x:Bind dt:MedicalCase.TypeColor(dt:MedicalCaseType.Satellite)}">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
+                    </Button>
+                </Grid>
+
+                <ListView 
+          x:Name="CasesListView" Grid.Row="3"
+          IsItemClickEnabled="True" Margin="10" 
+          ItemClick="CasesListView_ItemClick"
+          ItemsSource="{x:Bind Cases, Mode=OneWay}"
+          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:MedicalCaseViewModel">
+                            <Border BorderBrush="{x:Bind Color, Mode=OneWay}" BorderThickness="3" CornerRadius="5">
+                                <TextBlock Grid.Column="0" Text="{x:Bind Label, Mode=OneWay}" FontSize="20" Margin="5"/>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="5"/>
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="CreateContentTemplate" x:DataType="vm:PersonViewModel">
+            <StackPanel Width="300" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Neue Person"/>
+                    <Button Grid.Column="1" Click="SaveCreatePerson_Click" Background="Green" Margin="10">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;"/>
+                    </Button>
+                    <Button Grid.Column="2" Click="CancleCreatePerson_Click" Background="Red" Margin="10">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;"/>
+                    </Button>
+                </Grid>
+                <TextBox Header="Vorname" Text="{x:Bind FirstName, Mode=TwoWay}" />
+                <TextBox Header="Nachname" Text="{x:Bind LastName, Mode=TwoWay}" />
+                <TextBox Header="Geburtsdatum" Text="{x:Bind Birthday, Converter={StaticResource DateFormat}, Mode=TwoWay}"/>
+            </StackPanel>
+        </DataTemplate>
     </Page.Resources>
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <!--<Grid>
+        <Grid>
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -46,10 +180,7 @@
             QuerySubmitted="SearchPersonBox_QuerySubmitted"
             SuggestionChosen="SearchPersonBox_SuggestionChosen"/>
 
-                --><!-- 
-        IsItemClickEnabled="True" ItemClick="PersonList_ItemClick" 
-        SelectedItem="{x:Bind ViewModel.PersonToViewDetails, Mode=TwoWay}" 
-        --><!--
+                         
 
                 <SemanticZoom Grid.Row="2">
                     <SemanticZoom.ZoomedInView>
@@ -84,8 +215,8 @@
         Content="{x:Bind ViewModel.PersonToCreateOrEdit, Mode=TwoWay}"
         ContentTemplate="{StaticResource CreateContentTemplate}"/>
 
-            --><!--<Image Grid.Column="1" Source="{x:Bind ViewModel.RandomImage, Mode=OneWay}" Width="400" Height="400"/>--><!--
+            <!--<Image Grid.Column="1" Source="{x:Bind ViewModel.RandomImage, Mode=OneWay}" Width="400" Height="400"/>-->
 
-        </Grid>-->
+        </Grid>
     </Grid>
 </Page>

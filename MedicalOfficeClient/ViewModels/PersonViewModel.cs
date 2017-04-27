@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace MedicalOfficeClient.Views
+namespace MedicalOfficeClient.ViewModels
 {
   public class PersonViewModel : NotificationBase<Person>
   {

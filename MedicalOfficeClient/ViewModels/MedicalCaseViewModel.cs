@@ -8,7 +8,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media;
 
-namespace MedicalOfficeClient.Views
+namespace MedicalOfficeClient.ViewModels
 {
   public class MedicalCaseViewModel : NotificationBase<MedicalCase>
   {

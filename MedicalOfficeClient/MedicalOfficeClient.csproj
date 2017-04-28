@@ -125,9 +125,21 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\Documents\AnamneseErwachsene.pdf" />
+    <Content Include="Assets\Documents\AnamneseKinder.pdf" />
+    <Content Include="Assets\Documents\Befundbogen_Physio_zweiseitig.pdf" />
+    <Content Include="Assets\Documents\Satellitendokument_ohne_Verlauf.pdf" />
     <None Include="MedicalOfficeClient_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Bitmaps\BefundLogos.jpg" />
+    <Content Include="Assets\Bitmaps\Logo_Aphasie_Screening0001.jpg" />
+    <Content Include="Assets\Bitmaps\Logo_Aphasie_Screening0002.jpg" />
+    <Content Include="Assets\Bitmaps\Logo_Dysarthrie_Screening.jpg" />
+    <Content Include="Assets\Bitmaps\Logo_Zusatzdiagnostik_LWS_AWS0001.jpg" />
+    <Content Include="Assets\Bitmaps\Logo_Zusatzdiagnostik_LWS_AWS0002.jpg" />
+    <Content Include="Assets\Bitmaps\Logo_Zusatzdiagnostik_LWS_AWS0003.jpg" />
+    <Content Include="Assets\Bitmaps\Logo_Zusatzdiagnostik_LWS_AWS0004.jpg" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

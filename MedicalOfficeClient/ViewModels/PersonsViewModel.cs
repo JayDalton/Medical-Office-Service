@@ -59,8 +59,8 @@ namespace MedicalOfficeClient.ViewModels
 
     public async Task InitializeAsync()
     {
-      //await InitializeContextAsync();
-      //await InitializeContentAsync();
+      await InitializeContextAsync();
+      await InitializeContentAsync();
       //await SaveContextToJsonAsync();
     }
 

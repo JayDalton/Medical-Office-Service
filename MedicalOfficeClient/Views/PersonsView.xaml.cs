@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // Die Elementvorlage "Leere Seite" wird unter https://go.microsoft.com/fwlink/?LinkId=234238 dokumentiert.
@@ -25,6 +26,7 @@ namespace MedicalOfficeClient.Views
   /// </summary>
   public sealed partial class PersonsView : Page
   {
+    PersonViewModel _lastSelectedItem;
     PersonsViewModel ViewModel { get; set; }
     public ObservableCollection<string> Suggestions { get; private set; }
 
@@ -32,21 +34,51 @@ namespace MedicalOfficeClient.Views
     {
       this.Suggestions = new ObservableCollection<string>();
       this.InitializeComponent();
+      ViewModel = new PersonsViewModel();
     }
 
     protected async override void OnNavigatedTo(NavigationEventArgs e)
     {
       base.OnNavigatedTo(e);
-      ViewModel = new PersonsViewModel();
-      await ViewModel.InitializeAsync();
+
+      var items = MasterListView.ItemsSource as List<PersonViewModel>;
+
+      if (items == null)
+      {
+
+      }
+
+      if (ViewModel.GroupedPersons.Count() > 0)
+      {
+        await ViewModel.InitializeAsync();
+      }
+
+      if (e.Parameter != null)
+      {
+        var parm = e.Parameter;
+        //_lastSelectedItem = ;
+      }
+
+      UpdateForVisualState(AdaptiveStates.CurrentState);
+
     }
 
     private async void PersonList_ItemClick(object sender, ItemClickEventArgs e)
     {
-      ShowDetailPersonView();
-      var viewModel = e.ClickedItem as PersonViewModel;
-      await viewModel.LoadPreviewAsync();
-      ViewModel.PersonToViewDetails = viewModel;
+      var clickedItem = e.ClickedItem as PersonViewModel;
+      await clickedItem.LoadPreviewAsync();
+      _lastSelectedItem = clickedItem;
+
+      if (AdaptiveStates.CurrentState == NarrowState)
+      {
+        Frame.Navigate(typeof(PersonView), clickedItem.PersonId);
+      }
+      else
+      {
+
+      }
+
+      ViewModel.PersonToViewDetails = clickedItem;
     }
 
     private void AddPerson_Click(object sender, RoutedEventArgs e)
@@ -171,12 +203,30 @@ namespace MedicalOfficeClient.Views
 
     private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
     {
+      UpdateForVisualState(e.NewState, e.OldState);
+    }
 
+    private void UpdateForVisualState(VisualState newState, VisualState oldState = null)
+    {
+      var isNarrow = newState == NarrowState;
+
+      if (isNarrow && oldState == DefaultState && _lastSelectedItem != null)
+      {
+        // Resize down to the detail item. Don't play a transition.
+        Frame.Navigate(typeof(PersonView), _lastSelectedItem.PersonId, new SuppressNavigationTransitionInfo());
+      }
+
+      EntranceNavigationTransitionInfo.SetIsTargetElement(MasterListView, isNarrow);
+      if (DetailContentPresenter != null)
+      {
+        EntranceNavigationTransitionInfo.SetIsTargetElement(DetailContentPresenter, !isNarrow);
+      }
     }
 
     private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
     {
       //
+      MasterListView.SelectedItem = _lastSelectedItem;
     }
   }
 }

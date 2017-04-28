@@ -44,14 +44,14 @@ namespace MedicalOfficeClient.ViewModels
     private PersonViewModel _createPerson;
     public PersonViewModel PersonToCreateOrEdit
     {
-      get { return _createPerson; }
+      get { return _createPerson ?? default(PersonViewModel); }
       set { SetProperty(ref _createPerson, value); }
     }
 
     private PersonViewModel _detailPerson;
     public PersonViewModel PersonToViewDetails
     {
-      get { return _detailPerson; }
+      get { return _detailPerson ?? default(PersonViewModel); }
       set { SetProperty(ref _detailPerson, value); }
     }
 
@@ -59,8 +59,8 @@ namespace MedicalOfficeClient.ViewModels
 
     public async Task InitializeAsync()
     {
-      await InitializeContextAsync();
-      await InitializeContentAsync();
+      //await InitializeContextAsync();
+      //await InitializeContentAsync();
       //await SaveContextToJsonAsync();
     }
 
@@ -95,9 +95,9 @@ namespace MedicalOfficeClient.ViewModels
           .GroupBy(p => p.LastName[0].ToString(), (key, list) => new PersonGroup(key, list))
         ;
 
-        var vm = GroupedPersons.FirstOrDefault().FirstOrDefault();
-        await vm.LoadPreviewAsync();
-        PersonToViewDetails = vm;
+        //var vm = GroupedPersons.FirstOrDefault().FirstOrDefault();
+        //await vm.LoadPreviewAsync();
+        //PersonToViewDetails = vm;
       }
     }
 

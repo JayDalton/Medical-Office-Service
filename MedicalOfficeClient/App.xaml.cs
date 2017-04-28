@@ -1,5 +1,6 @@
 ﻿using MedicalOfficeClient.Services;
 using MedicalOfficeClient.Views;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,26 +20,26 @@ using Windows.UI.Xaml.Navigation;
 
 namespace MedicalOfficeClient
 {
+  /// <summary>
+  /// Stellt das anwendungsspezifische Verhalten bereit, um die Standardanwendungsklasse zu ergänzen.
+  /// </summary>
+  sealed partial class App : Application
+  {
     /// <summary>
-    /// Stellt das anwendungsspezifische Verhalten bereit, um die Standardanwendungsklasse zu ergänzen.
+    /// Initialisiert das Singletonanwendungsobjekt. Dies ist die erste Zeile von erstelltem Code
+    /// und daher das logische Äquivalent von main() bzw. WinMain().
     /// </summary>
-    sealed partial class App : Application
+    public App()
     {
-        /// <summary>
-        /// Initialisiert das Singletonanwendungsobjekt. Dies ist die erste Zeile von erstelltem Code
-        /// und daher das logische Äquivalent von main() bzw. WinMain().
-        /// </summary>
-        public App()
-        {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+      this.InitializeComponent();
+      this.Suspending += OnSuspending;
 
-            using (var db = new Database())
-            {
-              db.Database.EnsureDeleted();
-              db.Database.EnsureCreated();
-              //db.Database.Migrate();
-            }
+      using (var db = new Database())
+      {
+        db.Database.EnsureDeleted();
+        db.Database.EnsureCreated();
+        //db.Database.Migrate();
+      }
     }
 
     /// <summary>
@@ -47,63 +48,63 @@ namespace MedicalOfficeClient
     /// </summary>
     /// <param name="e">Details über Startanforderung und -prozess.</param>
     protected override void OnLaunched(LaunchActivatedEventArgs e)
+    {
+      Frame rootFrame = Window.Current.Content as Frame;
+
+      // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
+      // Nur sicherstellen, dass das Fenster aktiv ist.
+      if (rootFrame == null)
+      {
+        // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
+        rootFrame = new Frame();
+
+        rootFrame.NavigationFailed += OnNavigationFailed;
+
+        if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
-            // Nur sicherstellen, dass das Fenster aktiv ist.
-            if (rootFrame == null)
-            {
-                // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
-                rootFrame = new Frame();
-
-                rootFrame.NavigationFailed += OnNavigationFailed;
-
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Zustand von zuvor angehaltener Anwendung laden
-                }
-
-                // Den Frame im aktuellen Fenster platzieren
-                Window.Current.Content = rootFrame;
-            }
-
-            if (e.PrelaunchActivated == false)
-            {
-                if (rootFrame.Content == null)
-                {
-                    // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
-                    // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
-                    // übergeben werden
-                    rootFrame.Navigate(typeof(PersonsView), e.Arguments);
-                }
-                // Sicherstellen, dass das aktuelle Fenster aktiv ist
-                Window.Current.Activate();
-            }
+          //TODO: Zustand von zuvor angehaltener Anwendung laden
         }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn die Navigation auf eine bestimmte Seite fehlschlägt
-        /// </summary>
-        /// <param name="sender">Der Rahmen, bei dem die Navigation fehlgeschlagen ist</param>
-        /// <param name="e">Details über den Navigationsfehler</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
-            throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
-        }
+        // Den Frame im aktuellen Fenster platzieren
+        Window.Current.Content = rootFrame;
+      }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn die Ausführung der Anwendung angehalten wird.  Der Anwendungszustand wird gespeichert,
-        /// ohne zu wissen, ob die Anwendung beendet oder fortgesetzt wird und die Speicherinhalte dabei
-        /// unbeschädigt bleiben.
-        /// </summary>
-        /// <param name="sender">Die Quelle der Anhalteanforderung.</param>
-        /// <param name="e">Details zur Anhalteanforderung.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+      if (e.PrelaunchActivated == false)
+      {
+        if (rootFrame.Content == null)
         {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Anwendungszustand speichern und alle Hintergrundaktivitäten beenden
-            deferral.Complete();
+          // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
+          // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
+          // übergeben werden
+          rootFrame.Navigate(typeof(PersonsView), e.Arguments);
         }
+        // Sicherstellen, dass das aktuelle Fenster aktiv ist
+        Window.Current.Activate();
+      }
     }
+
+    /// <summary>
+    /// Wird aufgerufen, wenn die Navigation auf eine bestimmte Seite fehlschlägt
+    /// </summary>
+    /// <param name="sender">Der Rahmen, bei dem die Navigation fehlgeschlagen ist</param>
+    /// <param name="e">Details über den Navigationsfehler</param>
+    void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+    {
+      throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
+    }
+
+    /// <summary>
+    /// Wird aufgerufen, wenn die Ausführung der Anwendung angehalten wird.  Der Anwendungszustand wird gespeichert,
+    /// ohne zu wissen, ob die Anwendung beendet oder fortgesetzt wird und die Speicherinhalte dabei
+    /// unbeschädigt bleiben.
+    /// </summary>
+    /// <param name="sender">Die Quelle der Anhalteanforderung.</param>
+    /// <param name="e">Details zur Anhalteanforderung.</param>
+    private void OnSuspending(object sender, SuspendingEventArgs e)
+    {
+      var deferral = e.SuspendingOperation.GetDeferral();
+      //TODO: Anwendungszustand speichern und alle Hintergrundaktivitäten beenden
+      deferral.Complete();
+    }
+  }
 }

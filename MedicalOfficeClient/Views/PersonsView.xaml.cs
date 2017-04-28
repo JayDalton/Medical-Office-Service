@@ -68,14 +68,14 @@ namespace MedicalOfficeClient.Views
 
     private void ShowDetailPersonView()
     {
-      CreateContentPresenter.Visibility = Visibility.Collapsed;
-      DetailContentPresenter.Visibility = Visibility.Visible;
+      //CreateContentPresenter.Visibility = Visibility.Collapsed;
+      //DetailContentPresenter.Visibility = Visibility.Visible;
     }
 
     private void ShowCreatePersonView()
     {
-      DetailContentPresenter.Visibility = Visibility.Collapsed;
-      CreateContentPresenter.Visibility = Visibility.Visible;
+      //DetailContentPresenter.Visibility = Visibility.Collapsed;
+      //CreateContentPresenter.Visibility = Visibility.Visible;
     }
 
     private async void SaveCreatePerson_Click(object sender, RoutedEventArgs e)

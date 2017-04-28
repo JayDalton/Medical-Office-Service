@@ -148,7 +148,6 @@
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid>
-
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="2*" />
@@ -204,8 +203,9 @@
                 </SemanticZoom>
 
             </Grid>
+            
 
-            <ContentPresenter 
+            <!--<ContentPresenter 
         x:Name="DetailContentPresenter" Grid.Column="1" Visibility="Visible"
         Content="{x:Bind ViewModel.PersonToViewDetails, Mode=OneWay}"
         ContentTemplate="{StaticResource DetailContentTemplate}"/>
@@ -213,7 +213,7 @@
             <ContentPresenter 
         x:Name="CreateContentPresenter" Grid.Column="1" Visibility="Collapsed" 
         Content="{x:Bind ViewModel.PersonToCreateOrEdit, Mode=TwoWay}"
-        ContentTemplate="{StaticResource CreateContentTemplate}"/>
+        ContentTemplate="{StaticResource CreateContentTemplate}"/>-->
 
             <!--<Image Grid.Column="1" Source="{x:Bind ViewModel.RandomImage, Mode=OneWay}" Width="400" Height="400"/>-->
 

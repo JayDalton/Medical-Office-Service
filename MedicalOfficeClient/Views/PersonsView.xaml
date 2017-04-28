@@ -9,7 +9,8 @@
     xmlns:local="using:MedicalOfficeClient.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" NavigationCacheMode="Enabled"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
         <cv:DateFormatConverter x:Name="DateFormat"/>
@@ -53,7 +54,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Persönliche Daten" Style="{StaticResource SampleHeaderTextStyle}"/>
+                    <TextBlock Grid.Column="0" Text="Persönliche Daten"/>
                     <Button Grid.Column="1" Click="EditPerson_Click" Background="Blue" Margin="10">
                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE70F;"/>
                     </Button>
@@ -83,7 +84,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Medizinische Fälle" Style="{StaticResource SampleHeaderTextStyle}"/>
+                    <TextBlock Grid.Column="0" Text="Medizinische Fälle"/>
                     <Button Grid.Column="1" Click="{x:Bind AddNewCaseAsync}" Tag="{x:Bind dt:MedicalCaseType.Logo}" Margin="10" Background="{x:Bind dt:MedicalCase.TypeColor(dt:MedicalCaseType.Logo)}" >
                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
                     </Button>
@@ -97,6 +98,7 @@
                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
                     </Button>
                 </Grid>
+
 
                 <ListView 
           x:Name="CasesListView" Grid.Row="3"
@@ -146,70 +148,97 @@
         </DataTemplate>
     </Page.Resources>
     
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
+    <Grid x:Name="LayoutRoot" Loaded="LayoutRoot_Loaded">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveStates" CurrentStateChanged="AdaptiveStates_CurrentStateChanged">
+                <VisualState x:Name="DefaultState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                </VisualState>
 
-            <Grid Grid.Column="0">
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                    <VisualState.Setters>
+                        <Setter Target="MasterColumn.Width" Value="*" />
+                        <Setter Target="DetailColumn.Width" Value="0" />
+                        <Setter Target="MasterListView.SelectionMode" Value="None" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
 
-                <Grid Grid.Row="0" Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Personen"/>
-                    <Button Grid.Column="1" x:Name="AddPerson" Click="AddPerson_Click" Background="Blue">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
-                    </Button>
-                </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="MasterColumn" Width="320" />
+            <ColumnDefinition x:Name="DetailColumn" Width="*" />
+        </Grid.ColumnDefinitions>
 
-                <AutoSuggestBox Grid.Row="1" Margin="10"
-            x:Name="SearchPersonBox"
-            QueryIcon="Find" PlaceholderText="Person suchen..."
-            TextChanged="SearchPersonBox_TextChanged"
-            QuerySubmitted="SearchPersonBox_QuerySubmitted"
-            SuggestionChosen="SearchPersonBox_SuggestionChosen"/>
+        <Grid Grid.Column="0">
 
-                         
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <SemanticZoom Grid.Row="2">
-                    <SemanticZoom.ZoomedInView>
-                        <ListView x:Name="PersonList" SelectionMode="None"
-                ItemsSource="{x:Bind GroupedPersons.View, Mode=OneWay}"
-                ScrollViewer.IsHorizontalScrollChainingEnabled="False"
-                IsItemClickEnabled="True" ItemClick="PersonList_ItemClick" 
-                ItemTemplate="{StaticResource ZoomedInItemTemplate}">
-                            <ListView.GroupStyle>
-                                <GroupStyle HeaderTemplate="{StaticResource ZoomedInHeaderTemplate}"/>
-                            </ListView.GroupStyle>
-                        </ListView>
-                    </SemanticZoom.ZoomedInView>
-
-                    <SemanticZoom.ZoomedOutView>
-                        <GridView SelectionMode="None"
-              ItemsSource="{x:Bind GroupedPersons.View.CollectionGroups, Mode=OneWay}"
-              ItemTemplate="{StaticResource ZoomedOutItemTemplate}">
-                        </GridView>
-                    </SemanticZoom.ZoomedOutView>
-                </SemanticZoom>
-
+            <Grid Grid.Row="0" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Personen"/>
+                <Button Grid.Column="1" x:Name="AddPerson" Click="AddPerson_Click" Background="Blue">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;"/>
+                </Button>
             </Grid>
+
+            <AutoSuggestBox Grid.Row="1" Margin="10" x:Name="SearchPersonBox" QueryIcon="Find" PlaceholderText="Person suchen..." TextChanged="SearchPersonBox_TextChanged" QuerySubmitted="SearchPersonBox_QuerySubmitted" SuggestionChosen="SearchPersonBox_SuggestionChosen"/>
+
+            <SemanticZoom Grid.Row="2">
+                <SemanticZoom.ZoomedInView>
+                    <ListView 
+                        x:Name="MasterListView" 
+                        SelectionMode="None" 
+                        ItemsSource="{x:Bind GroupedPersons.View, Mode=OneWay}" 
+                        ScrollViewer.IsHorizontalScrollChainingEnabled="False" 
+                        IsItemClickEnabled="True" 
+                        ItemClick="PersonList_ItemClick" 
+                        ItemTemplate="{StaticResource ZoomedInItemTemplate}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.GroupStyle>
+                            <GroupStyle HeaderTemplate="{StaticResource ZoomedInHeaderTemplate}"/>
+                        </ListView.GroupStyle>
+                    </ListView>
+                </SemanticZoom.ZoomedInView>
+
+                <SemanticZoom.ZoomedOutView>
+                    <GridView 
+                        x:Name="MasterOverView" 
+                        SelectionMode="None" 
+                        ItemsSource="{x:Bind GroupedPersons.View.CollectionGroups, Mode=OneWay}" 
+                        ItemTemplate="{StaticResource ZoomedOutItemTemplate}">
+                        
+                    </GridView>
+                </SemanticZoom.ZoomedOutView>
+            </SemanticZoom>
+
+        </Grid>
             
 
-            <!--<ContentPresenter 
-        x:Name="DetailContentPresenter" Grid.Column="1" Visibility="Visible"
-        Content="{x:Bind ViewModel.PersonToViewDetails, Mode=OneWay}"
-        ContentTemplate="{StaticResource DetailContentTemplate}"/>
+        <ContentPresenter 
+            x:Name="DetailContentPresenter" 
+            Grid.Column="1" Visibility="Visible"
+            Content="{x:Bind ViewModel.PersonToViewDetails, Mode=OneWay}"
+            ContentTemplate="{StaticResource DetailContentTemplate}"/>
 
+            <!--
             <ContentPresenter 
         x:Name="CreateContentPresenter" Grid.Column="1" Visibility="Collapsed" 
         Content="{x:Bind ViewModel.PersonToCreateOrEdit, Mode=TwoWay}"
@@ -218,5 +247,4 @@
             <!--<Image Grid.Column="1" Source="{x:Bind ViewModel.RandomImage, Mode=OneWay}" Width="400" Height="400"/>-->
 
         </Grid>
-    </Grid>
 </Page>

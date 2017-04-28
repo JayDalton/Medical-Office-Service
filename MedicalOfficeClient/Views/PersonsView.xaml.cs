@@ -168,5 +168,15 @@ namespace MedicalOfficeClient.Views
         .ThenBy(i => i.FormName)
         .ToList();
     }
+
+    private void AdaptiveStates_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+    {
+
+    }
+
+    private void LayoutRoot_Loaded(object sender, RoutedEventArgs e)
+    {
+      //
+    }
   }
 }
